@@ -9,11 +9,15 @@ import datetime
 from dateutil.tz import tzlocal
 import logging
 
-
+logger_name = "openstack-k8s-connector"
+logger = logging.getLogger(logger_name)
+logger.setLevel(logging.DEBUG)
 NODE_NAME = "openstack-k8s-connector"
+KUBELET_VERSION = "v1.8.1"
 
 def update():
     try:
+        logger.info("Node Update")
         config.load_kube_config()
 
         configuration = kubernetes.client.Configuration()
@@ -21,20 +25,23 @@ def update():
 
         api_instance = kubernetes.client.CoreV1Api()
 
-        thread = api_instance.list_node(async=True)
+        try:
+            result = api_instance.list_node()
+        except ApiException as e:
+            logger.error("Exception when calling CoreV1Api->list_node: %s\n" % e)
 
-        result = thread.get()
+        found = False
         for item in result.items:
             if item.metadata.name == NODE_NAME:
                 found = True
                 break
 
         if found:
-            logging.info("found openstack-k8s-connector")
+            logger.info("found node openstack-k8s-connector")
         else:
             time_last = get_time()
             status = v1_node_status.V1NodeStatus(
-                node_info={'kubeletVersion': 'v1.6.6'},
+                node_info={'kubeletVersion': KUBELET_VERSION},
                 conditions=_node_get_condition(time_last)
             )
             body = kubernetes.client.V1Node(api_version="v1",
@@ -43,41 +50,41 @@ def update():
                                             spec={"taints": [{"key": "openstack/zun",
                                                               "effect": "NoSchedule"}]},
                                             status=status)
+            import pdb;pdb.set_trace()
             try:
                 api_response = api_instance.create_node(body)
                 pprint(api_response)
             except ApiException as e:
-                logging.error("Exception when calling CoreV1Api->create_node: %s\n" % e)
+                logger.error("Exception when calling CoreV1Api->create_node: %s\n" % e)
     except Exception as e:
-        logging.error("Error: %s", e)
+        logger.error("Error: %s", e)
 
 
 def get_time():
-    time = datetime.datetime.now(tzlocal()).strftime('%a, %d %b %Y %X %z')
+    time = datetime.datetime.now(tzlocal())
     return time
 
 
 def _node_get_condition(time_last):
     provider_registered = False
-    conditions = [node_condition.V1NodeCondition(get_time(),
-                                                time_last,
-                                                'kubelet is posting ready',
-                                                'KubeletReady',
-                                                'True',
-                                                'Ready')]
+    conditions = [node_condition.V1NodeCondition(last_heartbeat_time=get_time(),
+                                                 last_transition_time=time_last,
+                                                 message='kubelet is posting ready',
+                                                 reason='KubeletReady',
+                                                 status='True',
+                                                 type='Ready')]
 
 
-    time = get_time()
     message = 'kubelet has sufficient disk space available'
     reason = 'KubeletHasSufficientDisk'
     status = 'False'
     type = 'OutOfDisk'
-    condition_outofdisk = node_condition.V1NodeCondition(get_time(),
-                                                         time_last,
-                                                         message,
-                                                         reason,
-                                                         status,
-                                                         type)
+    condition_outofdisk = node_condition.V1NodeCondition(last_heartbeat_time=get_time(),
+                                                         last_transition_time=time_last,
+                                                         message=message,
+                                                         reason=reason,
+                                                         status=status,
+                                                         type=type)
     conditions.append(condition_outofdisk)
 
     if not provider_registered:
@@ -107,11 +114,12 @@ def node_update_status(node_name):
     try:
         node = api_instance.read_node(node_name)
     except ApiException as e:
-        logging.error("Exception when calling CoreV1Api->read_node: %s\n" % e)
+        logger.error("Exception when calling CoreV1Api->read_node: %s\n" % e)
+        return
     time_last = get_time()
     conditions = _node_get_condition(time_last)
     node.status = v1_node_status.V1NodeStatus(
-        node_info={'kubeletVersion': 'v1.6.6', 'architecture': "amd64"},
+        node_info={'kubeletVersion': KUBELET_VERSION, 'architecture': "amd64"},
         allocatable={"cpu": "8", "memory": "100Gi", "pods": "20"},
         conditions=conditions
     )
@@ -121,5 +129,5 @@ def node_update_status(node_name):
     try:
         api_instance.replace_node(node.metadata.name, node)
     except ApiException as e:
-        logging.error("Exception when calling CoreV1Api->replace_node: %s\n" % e)
+        logger.error("Exception when calling CoreV1Api->replace_node: %s\n" % e)
 
