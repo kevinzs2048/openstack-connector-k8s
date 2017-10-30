@@ -1,7 +1,8 @@
 import sys
 import logging
+import time
 from connector import node
-from threading import Timer
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 logger_name = "openstack-k8s-connector"
@@ -15,16 +16,22 @@ logger.addHandler(ch)
 
 
 def sync_node_status():
-    logger.info('Start syncing Node states.')
+    logger.warning('Start syncing Node states.')
 
     node.node_update_status(node.NODE_NAME)
 
 def main(argv):
-    logger.info('Process begin')
     node.update()
-    #node.node_update_status(node.NODE_NAME, node.get_time())
-    Timer(5, sync_node_status()).start()
-
+    sched = BackgroundScheduler()
+    sched.add_job(sync_node_status, 'interval', seconds=5)
+    sched.start()
+    try:
+        # This is here to simulate application activity (which keeps the main thread alive).
+        while True:
+            time.sleep(2)
+    except (KeyboardInterrupt, SystemExit):
+        # Not strictly necessary if daemonic mode is enabled but should be done if possible
+        sched.shutdown()
 
 if __name__ == '__main__':
     main(sys.argv)

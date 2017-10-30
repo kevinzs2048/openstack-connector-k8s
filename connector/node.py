@@ -50,7 +50,6 @@ def update():
                                             spec={"taints": [{"key": "openstack/zun",
                                                               "effect": "NoSchedule"}]},
                                             status=status)
-            import pdb;pdb.set_trace()
             try:
                 api_response = api_instance.create_node(body)
                 pprint(api_response)
@@ -106,28 +105,29 @@ def _node_get_condition(time_last):
 
 def node_update_status(node_name):
     config.load_kube_config()
-
     configuration = kubernetes.client.Configuration()
     configuration.api_key['authorization'] = 'YOUR_API_KEY'
     api_instance = kubernetes.client.CoreV1Api()
-
     try:
         node = api_instance.read_node(node_name)
+        logger.warning(node.status)
     except ApiException as e:
         logger.error("Exception when calling CoreV1Api->read_node: %s\n" % e)
         return
-    time_last = get_time()
-    conditions = _node_get_condition(time_last)
-    node.status = v1_node_status.V1NodeStatus(
-        node_info={'kubeletVersion': KUBELET_VERSION, 'architecture': "amd64"},
-        allocatable={"cpu": "8", "memory": "100Gi", "pods": "20"},
-        conditions=conditions
-    )
-    #TODO(kevinz): calculate quota here
-    node.status.capacity = node.status.allocatable
+    if node:
+        time_last = get_time()
+        conditions = _node_get_condition(time_last)
+        node.status = v1_node_status.V1NodeStatus(
+            node_info={'kubeletVersion': KUBELET_VERSION, 'architecture': "amd64"},
+            allocatable={"cpu": "8", "memory": "100Gi", "pods": "20"},
+            conditions=conditions
+        )
+        #TODO(kevinz): calculate quota here
+        node.status.capacity = node.status.allocatable
 
-    try:
-        api_instance.replace_node(node.metadata.name, node)
-    except ApiException as e:
-        logger.error("Exception when calling CoreV1Api->replace_node: %s\n" % e)
-
+        try:
+            api_instance.replace_node(node.metadata.name, node)
+        except ApiException as e:
+            logger.error("Exception when calling CoreV1Api->replace_node: %s\n" % e)
+    else:
+        logger.warning("No available nodes")
