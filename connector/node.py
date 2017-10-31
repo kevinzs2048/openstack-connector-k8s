@@ -119,14 +119,12 @@ def node_update_status(node_name):
         conditions = _node_get_condition(time_last)
         node.status = v1_node_status.V1NodeStatus(
             node_info={'kubeletVersion': KUBELET_VERSION, 'architecture': "amd64"},
-            allocatable={"cpu": "4", "memory": "50Gi", "pods": "20"},
+            allocatable={"cpu": "8", "memory": "100Gi", "pods": "20"},
             conditions=conditions
         )
         #TODO(kevinz): calculate quota here
         node.status.capacity = node.status.allocatable
         try:
-            import pdb;
-            pdb.set_trace()
             logger.warning(node.status)
             result = api_instance.replace_node_status(node.metadata.name, node)
             logger.warning(result)
