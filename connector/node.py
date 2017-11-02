@@ -9,11 +9,13 @@ import datetime
 from dateutil.tz import tzlocal
 import logging
 
+
 logger_name = "openstack-k8s-connector"
 logger = logging.getLogger(logger_name)
 logger.setLevel(logging.DEBUG)
 NODE_NAME = "openstack-k8s-connector"
 KUBELET_VERSION = "v1.8.1"
+
 
 def update():
     try:
@@ -113,7 +115,7 @@ def node_update_status(node_name):
     except ApiException as e:
         logger.error("Exception when calling CoreV1Api->read_node: %s\n" % e)
         return
-    import pdb;pdb.set_trace()
+
     if node:
         time_last = get_time()
         conditions = _node_get_condition(time_last)

@@ -3,8 +3,10 @@ import logging
 import time
 from connector import node
 from apscheduler.schedulers.background import BackgroundScheduler
+from connector import client
 
 
+CONTAINER_UUID = "65c7c310-1410-4d5c-9560-d6cd03d514d5"
 logger_name = "openstack-k8s-connector"
 logger = logging.getLogger(logger_name)
 logger.setLevel(logging.DEBUG)
@@ -33,5 +35,10 @@ def main(argv):
         # Not strictly necessary if daemonic mode is enabled but should be done if possible
         sched.shutdown()
 
+def main_test_keystone():
+    cs = client.Client()
+    print cs.list()
+
 if __name__ == '__main__':
-    main(sys.argv)
+    #main(sys.argv)
+    main_test_keystone()
