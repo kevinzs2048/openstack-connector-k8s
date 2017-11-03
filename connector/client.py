@@ -1,4 +1,3 @@
-#
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy
 # of the License at
@@ -49,7 +48,6 @@ class Client(object):
         self.endpoint_override = env('BYPASS_URL', default=None)
         self.interface = env('OS_ENDPOINT_TYPE', default=DEFAULT_ENDPOINT_TYPE)
         self.insecure = env('ZUNCLIENT_INSECURE', default=False)
-        import pdb;pdb.set_trace()
         self.cs = client.Client(version=self.version,
                                 username=self.username,
                                 password=self.password,

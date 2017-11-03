@@ -8,4 +8,4 @@ spec:
     imagePullPolicy: Always
     name: nginx
   dnsPolicy: ClusterFirst
-  nodeName: openstack-connector
+  nodeName: openstack-k8s-connector
