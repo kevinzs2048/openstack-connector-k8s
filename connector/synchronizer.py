@@ -29,7 +29,15 @@ class synchronizer(Client):
         self.k8sclient = k8sclient
 
     def _get_capsule_info(self):
-        return self.openstackclient.cs.capsules.list()
+        capsules = self.openstackclient.cs.capsules.list()
+        capsules_for_connector = {}
+        for capsule in capsules:
+            if capsule.meta_label.get('orchestrator', default=None) != 'kubernetes':
+                continue
+            #TODO(kevinz): Make the capsule meta_name as the identification.
+            capsules_for_connector[capsule.meta_name] = capsule
+        return capsules_for_connector
+
 
     def _get_pods_info(self):
         thread = self.k8sclient.list_namespace_pod(namespace="default",
@@ -47,4 +55,9 @@ class synchronizer(Client):
         capsules = self._get_capsule_info()
         pods = self._get_pods_info()
         for pod in pods:
-            print pod
+            if capsules[pod.spec.node_name] is None:
+                continue
+            ##TODO(kevinz): Add transfermation from obj to json
+            ##and tweak the parameters
+
+
