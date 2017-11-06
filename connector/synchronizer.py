@@ -13,8 +13,10 @@
 import kubernetes
 from kubernetes import client as k8s_client
 from connector.client import Client
+from connector import common
 import datetime
 import logging
+import json
 
 
 logger_name = "openstack-k8s-connector"
@@ -32,7 +34,7 @@ class synchronizer(Client):
         capsules = self.openstackclient.cs.capsules.list()
         capsules_for_connector = {}
         for capsule in capsules:
-            if capsule.meta_label.get('orchestrator', default=None) != 'kubernetes':
+            if capsule.meta_labels.get('orchestrator') != 'kubernetes':
                 continue
             #TODO(kevinz): Make the capsule meta_name as the identification.
             capsules_for_connector[capsule.meta_name] = capsule
@@ -40,8 +42,8 @@ class synchronizer(Client):
 
 
     def _get_pods_info(self):
-        thread = self.k8sclient.list_namespace_pod(namespace="default",
-                                                   async=True)
+        thread = self.k8sclient.list_namespaced_pod(namespace="default",
+                                                    async=True)
         pods = thread.get()
         pod_in_connector = []
         for pod in pods.items:
@@ -53,11 +55,13 @@ class synchronizer(Client):
 
     def sync_capsule_k8s(self):
         capsules = self._get_capsule_info()
+        if capsules is None:
+            return
         pods = self._get_pods_info()
         for pod in pods:
-            if capsules[pod.spec.node_name] is None:
+            if capsules.get(pod.spec.node_name) is not None:
                 continue
-            ##TODO(kevinz): Add transfermation from obj to json
-            ##and tweak the parameters
-
-
+            capsule = common.pod_to_capsule(pod)
+            opts = {}
+            opts['spec'] = capsule
+            self.openstackclient.cs.capsules.create(**opts)
