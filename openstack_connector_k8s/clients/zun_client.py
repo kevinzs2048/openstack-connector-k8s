@@ -10,44 +10,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 from zunclient.experimental import client
 from zunclient import api_versions
+import openstack_connector_k8s.conf
 
 DEFAULT_API_VERSION = api_versions.DEFAULT_API_VERSION
 EXPERIENTAL_SERVICE_TYPE = 'container-experimental'
 DEFAULT_ENDPOINT_TYPE = 'publicURL'
-
-
-def env(*args, **kwargs):
-    """Returns the first environment variable set.
-
-    If all are empty, defaults to '' or keyword arg `default`.
-    """
-    for arg in args:
-        value = os.environ.get(arg)
-        if value:
-            return value
-    return kwargs.get('default', '')
-
+CONF = openstack_connector_k8s.conf.CONF
 
 class Client(object):
     def __init__(self, api_version=DEFAULT_API_VERSION, **kwargs):
         self.version = api_version
-        self.username = env('OS_USERNAME', default=None)
-        self.password = env('OS_PASSWORD', default=None)
-        self.project_id = env('OS_PROJECT_ID', default=None)
-        self.project_name = env('OS_PROJECT_NAME', default=None)
-        self.user_domain_id = env('OS_USER_DOMAIN_ID')
-        self.user_domain_name = env('OS_USER_DOMAIN_NAME')
-        self.project_domain_id = env('OS_PROJECT_DOMAIN_ID')
-        self.project_domain_name = env('OS_PROJECT_DOMAIN_NAME')
-        self.auth_url = env('OS_AUTH_URL')
+        self.username = CONF.zun_client.os_username
+        self.password = CONF.zun_client.os_password
+        self.project_id = CONF.zun_client.os_password
+        self.project_name = CONF.zun_client.os_project_id
+        self.user_domain_id = CONF.zun_client.os_user_domain_id
+        self.user_domain_name = CONF.zun_client.os_user_domain_name
+        self.project_domain_id = CONF.zun_client.os_project_domain_id
+        self.project_domain_name = CONF.zun_client.os_project_domain_name
+        self.auth_url = CONF.zun_client.os_auth_url
         self.service_type = EXPERIENTAL_SERVICE_TYPE
-        self.region_name = env('OS_REGION_NAME')
-        self.endpoint_override = env('BYPASS_URL', default=None)
-        self.interface = env('OS_ENDPOINT_TYPE', default=DEFAULT_ENDPOINT_TYPE)
-        self.insecure = env('ZUNCLIENT_INSECURE', default=False)
+        self.region_name = CONF.zun_client.os_region_name
+        self.endpoint_override = CONF.zun_client.endpoint_override
+        self.interface = CONF.zun_client.os_endpoint_type
+        self.insecure = CONF.zun_client.zunclient_insecure
         self.cs = client.Client(version=self.version,
                                 username=self.username,
                                 password=self.password,

@@ -10,6 +10,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import eventlet
+from oslo_config import cfg
 
-eventlet.monkey_patch()
+from openstack_connector_k8s.conf import k8s
+from openstack_connector_k8s.conf import zun_client
+
+CONF = cfg.CONF
+
+k8s.register_opts(CONF)
+zun_client.register_opts(CONF)

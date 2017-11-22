@@ -1,3 +1,6 @@
+# Copyright (c) 2016 Mirantis, Inc.
+# All Rights Reserved.
+#
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
 #    a copy of the License at
@@ -10,6 +13,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import eventlet
 
-eventlet.monkey_patch()
+class K8sClientException(Exception):
+    pass

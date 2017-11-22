@@ -16,7 +16,8 @@ import os_vif
 from oslo_log import log as logging
 from oslo_service import service
 
-from openstack_connector_k8s import clients
+from openstack_connector_k8s.clients import clients
+
 #from kuryr_kubernetes import config
 #from kuryr_kubernetes import constants
 #from kuryr_kubernetes.controller.handlers import lbaas as h_lbaas
