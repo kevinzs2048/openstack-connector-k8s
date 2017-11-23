@@ -10,11 +10,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from openstack_connector_k8s import config
+import openstack_connector_k8s.conf
 from openstack_connector_k8s.clients import k8s_client
 from openstack_connector_k8s.clients import zun_client
 
-
+CONF = openstack_connector_k8s.conf.CONF
 _clients = {}
 _ZUN_CLIENT = 'zun-client'
 _KUBERNETES_CLIENT = 'kubernetes-client'
@@ -39,4 +39,4 @@ def setup_neutron_client():
 
 def setup_kubernetes_client():
     _clients[_KUBERNETES_CLIENT] = k8s_client.K8sClient(
-        config.CONF.kubernetes.api_root)
+        CONF.kubernetes.api_root)
