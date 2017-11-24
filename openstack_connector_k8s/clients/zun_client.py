@@ -19,6 +19,7 @@ EXPERIENTAL_SERVICE_TYPE = 'container-experimental'
 DEFAULT_ENDPOINT_TYPE = 'publicURL'
 CONF = openstack_connector_k8s.conf.CONF
 
+
 class Client(object):
     def __init__(self, api_version=DEFAULT_API_VERSION, **kwargs):
         self.version = api_version

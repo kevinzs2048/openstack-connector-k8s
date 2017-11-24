@@ -33,8 +33,8 @@ def setup_clients():
     setup_kubernetes_client()
 
 
-def setup_neutron_client():
-    _clients[_ZUN_CLIENT] = zun_client.get_zun_client()
+def setup_zun_client():
+    _clients[_ZUN_CLIENT] = zun_client.client()
 
 
 def setup_kubernetes_client():

@@ -17,8 +17,8 @@ from oslo_log import log as logging
 from oslo_service import service
 
 from openstack_connector_k8s.clients import clients
+from openstack_connector_k8s import conf
 
-#from kuryr_kubernetes import config
 #from kuryr_kubernetes import constants
 #from kuryr_kubernetes.controller.handlers import lbaas as h_lbaas
 #from kuryr_kubernetes.controller.handlers import pipeline as h_pipeline
@@ -27,6 +27,7 @@ from openstack_connector_k8s.clients import clients
 #from kuryr_kubernetes import watcher
 
 LOG = logging.getLogger(__name__)
+CONF = conf.CONF
 
 
 class ConnectorService(service.Service):
@@ -62,9 +63,9 @@ class ConnectorService(service.Service):
 
 
 def start():
-    config.init(sys.argv[1:])
-    config.setup_logging()
+    conf.base.init(sys.argv[1:])
+    conf.base.setup_logging()
     clients.setup_clients()
-    os_vif.initialize()
-    kuryrk8s_launcher = service.launch(config.CONF, KuryrK8sService())
+    #os_vif.initialize()
+    kuryrk8s_launcher = service.launch(CONF, ConnectorService())
     kuryrk8s_launcher.wait()
