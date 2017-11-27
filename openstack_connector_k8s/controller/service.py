@@ -12,16 +12,15 @@
 
 import sys
 
-import os_vif
 from oslo_log import log as logging
 from oslo_service import service
 
 from openstack_connector_k8s.clients import clients
 from openstack_connector_k8s import conf
+from openstack_connector_k8s.controller.handlers import pipeline as h_pipeline
 
 #from kuryr_kubernetes import constants
 #from kuryr_kubernetes.controller.handlers import lbaas as h_lbaas
-#from kuryr_kubernetes.controller.handlers import pipeline as h_pipeline
 #from kuryr_kubernetes.controller.handlers import vif as h_vif
 #from kuryr_kubernetes import objects
 #from kuryr_kubernetes import watcher
