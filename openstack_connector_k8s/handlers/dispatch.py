@@ -1,6 +1,3 @@
-# Copyright (c) 2016 Mirantis, Inc.
-# All Rights Reserved.
-#
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
 #    a copy of the License at
@@ -16,7 +13,7 @@
 import abc
 
 import six
-from kuryr_kubernetes.handlers import base as h_base
+from openstack_connector_k8s.handlers import base as h_base
 from oslo_log import log as logging
 
 LOG = logging.getLogger(__name__)
