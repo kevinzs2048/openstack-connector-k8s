@@ -17,13 +17,14 @@ from oslo_service import service
 
 from openstack_connector_k8s.clients import clients
 from openstack_connector_k8s import conf
-from openstack_connector_k8s.controller.handlers import pipeline as h_pipeline
+from openstack_connector_k8s.conf import base as conf_base
+from openstack_connector_k8s.controller.handlers import pipeline
 from openstack_connector_k8s import watcher
-#from kuryr_kubernetes import constants
+from openstack_connector_k8s import constants
 #from kuryr_kubernetes.controller.handlers import lbaas as h_lbaas
 #from kuryr_kubernetes.controller.handlers import vif as h_vif
 #from kuryr_kubernetes import objects
-#from kuryr_kubernetes import watcher
+
 
 LOG = logging.getLogger(__name__)
 CONF = conf.CONF
@@ -36,7 +37,7 @@ class ConnectorService(service.Service):
         super(ConnectorService, self).__init__()
 
         #TODO(kevinz): Add the DB Object and Operation.
-        pipeline = h_pipeline.ControllerPipeline(self.tg)
+        pipeline = pipeline.ControllerPipeline(self.tg)
         self.watcher = watcher.Watcher(pipeline, self.tg)
         # TODO(kevinz): pluggable resource/handler registration
         for resource in ["pods", "services", "endpoints"]:
@@ -61,10 +62,9 @@ class ConnectorService(service.Service):
         super(ConnectorService, self).stop(graceful)
 
 
-def start():
-    conf.base.init(sys.argv[1:])
-    conf.base.setup_logging()
+def start(argv):
+    conf_base.init(sys.argv[1:])
+    conf_base.setup_logging()
     clients.setup_clients()
-    #os_vif.initialize()
-    kuryrk8s_launcher = service.launch(CONF, ConnectorService())
-    kuryrk8s_launcher.wait()
+    connector_launcher = service.launch(CONF, ConnectorService())
+    connector_launcher.wait()

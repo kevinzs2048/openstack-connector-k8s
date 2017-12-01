@@ -18,7 +18,7 @@ from oslo_log import log as logging
 from oslo_serialization import jsonutils
 import requests
 
-from openstack_connector_k8s.common._i18n import _
+from openstack_connector_k8s.common.i18n import _
 from openstack_connector_k8s import conf
 from openstack_connector_k8s import exceptions as exc
 

@@ -13,8 +13,7 @@
 import logging as sys_logging
 
 from oslo_reports import guru_meditation_report as gmr
-
-from openstack_k8s_connector import version
+from openstack_connector_k8s import version
 
 # During the call to gmr.TextGuruMeditation.setup_autorun(), Guru Meditation
 # Report tries to start logging. Set a handler here to accommodate this.

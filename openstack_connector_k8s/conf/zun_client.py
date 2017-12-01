@@ -14,6 +14,7 @@ import os
 
 from oslo_config import cfg
 from openstack_connector_k8s.common import utils
+from openstack_connector_k8s.common.i18n import _
 
 EXPERIENTAL_SERVICE_TYPE = 'container-experimental'
 DEFAULT_ENDPOINT_TYPE = 'publicURL'

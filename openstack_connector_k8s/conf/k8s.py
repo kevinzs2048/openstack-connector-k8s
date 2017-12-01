@@ -13,6 +13,7 @@
 import os
 
 from oslo_config import cfg
+from openstack_connector_k8s.common.i18n import _
 
 
 k8s_config_opts = [

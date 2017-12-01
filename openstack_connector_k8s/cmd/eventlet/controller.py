@@ -13,7 +13,5 @@
 from openstack_connector_k8s.controller import service
 
 
-start = service.start
-
-if __name__ == '__main__':
-    start()
+def start(argv):
+    service.start(argv)
