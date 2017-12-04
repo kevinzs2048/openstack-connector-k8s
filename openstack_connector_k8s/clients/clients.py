@@ -15,11 +15,11 @@ from oslo_log import log as logging
 from openstack_connector_k8s.clients import k8s_client
 from openstack_connector_k8s.clients import zun_client
 
-CONF = openstack_connector_k8s.conf.CONF
 _clients = {}
 _ZUN_CLIENT = 'zun-client'
 _KUBERNETES_CLIENT = 'kubernetes-client'
 LOG = logging.getLogger(__name__)
+CONF = openstack_connector_k8s.conf.CONF
 
 
 def get_zun_client():
@@ -52,3 +52,4 @@ def setup_zun_client():
 def setup_kubernetes_client():
     _clients[_KUBERNETES_CLIENT] = k8s_client.K8sClient(
         CONF.kubernetes.api_root)
+    LOG.info("Connected to Kubernetes")

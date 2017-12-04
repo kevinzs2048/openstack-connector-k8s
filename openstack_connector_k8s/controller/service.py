@@ -37,7 +37,7 @@ class ConnectorService(service.Service):
         super(ConnectorService, self).__init__()
 
         #TODO(kevinz): Add the DB Object and Operation.
-        pipeline = pipeline.ControllerPipeline(self.tg)
+        #pipeline = pipeline.ControllerPipeline(self.tg)
         self.watcher = watcher.Watcher(pipeline, self.tg)
         # TODO(kevinz): pluggable resource/handler registration
         for resource in ["pods", "services", "endpoints"]:

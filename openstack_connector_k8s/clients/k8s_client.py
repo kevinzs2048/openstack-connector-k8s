@@ -19,21 +19,21 @@ from oslo_serialization import jsonutils
 import requests
 
 from openstack_connector_k8s.common.i18n import _
-from openstack_connector_k8s import conf
+import openstack_connector_k8s.conf
 from openstack_connector_k8s import exceptions as exc
 
 LOG = logging.getLogger(__name__)
-config = conf.k8s
+CONF = openstack_connector_k8s.conf.CONF
 
 class K8sClient(object):
 
     def __init__(self, base_url):
         self._base_url = base_url
-        cert_file = config.CONF.kubernetes.ssl_client_crt_file
-        key_file = config.CONF.kubernetes.ssl_client_key_file
-        ca_crt_file = config.CONF.kubernetes.ssl_ca_crt_file
-        self.verify_server = config.CONF.kubernetes.ssl_verify_server_crt
-        token_file = config.CONF.kubernetes.token_file
+        cert_file = CONF.kubernetes.ssl_client_crt_file
+        key_file = CONF.kubernetes.ssl_client_key_file
+        ca_crt_file = CONF.kubernetes.ssl_ca_crt_file
+        self.verify_server = CONF.kubernetes.ssl_verify_server_crt
+        token_file = CONF.kubernetes.token_file
         self.token = None
         self.cert = (None, None)
         if token_file:

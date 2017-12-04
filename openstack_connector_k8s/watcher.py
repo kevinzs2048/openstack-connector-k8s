@@ -12,7 +12,7 @@
 
 from oslo_log import log as logging
 
-from openstack_connector_k8s import clients
+from openstack_connector_k8s.clients import clients
 
 LOG = logging.getLogger(__name__)
 
