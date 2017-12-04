@@ -14,9 +14,12 @@ import sys
 
 from openstack_connector_k8s import version
 from oslo_log import log as logging
+from oslo_config import cfg
 from openstack_connector_k8s.conf import CONF
 
 LOG = logging.getLogger(__name__)
+CONF = cfg.CONF
+DOMAIN = "openstack-connector-k8s"
 
 def init(args, **kwargs):
     version_connector = version.version_info.version_string()
@@ -24,8 +27,9 @@ def init(args, **kwargs):
 
 
 def setup_logging():
-    logging.setup(CONF, 'openstack-connector-k8s')
-    logging.set_defaults(default_log_levels=logging.get_default_log_levels())
+    logging.setup(CONF, DOMAIN)
+    import pdb;pdb.set_trace()
+    #logging.set_defaults(default_log_levels=logging.get_default_log_levels())
     version_connector = version.version_info.version_string()
     LOG.info("Logging enabled!")
     LOG.info("%(prog)s version %(version)s",

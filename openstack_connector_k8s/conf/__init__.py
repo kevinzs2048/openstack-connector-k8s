@@ -11,11 +11,13 @@
 #    under the License.
 
 from oslo_config import cfg
-
+from oslo_log import log as logging
 from openstack_connector_k8s.conf import k8s
 from openstack_connector_k8s.conf import zun_client
 
 CONF = cfg.CONF
-
+# NOTE(kevinz): All the conf need to register here.
+# Other place will fail
 k8s.register_opts(CONF)
 zun_client.register_opts(CONF)
+logging.register_options(CONF)
