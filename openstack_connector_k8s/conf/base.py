@@ -28,8 +28,6 @@ def init(args, **kwargs):
 
 def setup_logging():
     logging.setup(CONF, DOMAIN)
-    import pdb;pdb.set_trace()
-    #logging.set_defaults(default_log_levels=logging.get_default_log_levels())
     version_connector = version.version_info.version_string()
     LOG.info("Logging enabled!")
     LOG.info("%(prog)s version %(version)s",

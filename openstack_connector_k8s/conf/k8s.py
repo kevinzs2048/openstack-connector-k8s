@@ -22,13 +22,14 @@ k8s_config_opts = [
                default=os.environ.get('K8S_API', 'http://localhost:8080')),
     cfg.StrOpt('ssl_client_crt_file',
                help=_("Absolute path to client cert to "
-                      "connect to HTTPS K8S_API")),
+                      "connect to HTTPS K8S_API"),
+               default=None),
     cfg.StrOpt('ssl_client_key_file',
                help=_("Absolute path client key file to "
-                      "connect to HTTPS K8S_API")),
+                      "connect to HTTPS K8S_API"), default=None),
     cfg.StrOpt('ssl_ca_crt_file',
                help=_("Absolute path to ca cert file to "
-                      "connect to HTTPS K8S_API")),
+                      "connect to HTTPS K8S_API"), default=None),
     cfg.BoolOpt('ssl_verify_server_crt',
                 help=_("HTTPS K8S_API server identity verification"),
                 default=False),

@@ -53,6 +53,7 @@ class Client(object):
                                 interface=self.interface,
                                 insecure=self.insecure,
                                 **kwargs)
+        print self.cs.capsules.list()
 
     def list(self):
         return self.cs.capsules.list()
