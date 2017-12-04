@@ -25,8 +25,8 @@ class Client(object):
         self.version = api_version
         self.username = CONF.zun_client.os_username
         self.password = CONF.zun_client.os_password
-        self.project_id = CONF.zun_client.os_password
-        self.project_name = CONF.zun_client.os_project_id
+        self.project_id = CONF.zun_client.os_project_id
+        self.project_name = CONF.zun_client.os_project_name
         self.user_domain_id = CONF.zun_client.os_user_domain_id
         self.user_domain_name = CONF.zun_client.os_user_domain_name
         self.project_domain_id = CONF.zun_client.os_project_domain_id
@@ -53,7 +53,6 @@ class Client(object):
                                 interface=self.interface,
                                 insecure=self.insecure,
                                 **kwargs)
-        print self.cs.capsules.list()
 
     def list(self):
         return self.cs.capsules.list()

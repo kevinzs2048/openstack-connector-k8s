@@ -55,10 +55,10 @@ zun_client_opts = [
                default=utils.env('BYPASS_URL', default=None)),
     cfg.StrOpt('os_endpoint_type',
                help=_("OS endpoint type"),
-               default=utils.env('OS_ENDPOINT_TYPE', default=None)),
+               default=utils.env('OS_ENDPOINT_TYPE', default="publicURL")),
     cfg.StrOpt('zunclient_insecure',
                help=_("zun client insecure"),
-               default=utils.env('ZUNCLIENT_INSECURE', default=None)),
+               default=utils.env('ZUNCLIENT_INSECURE', default=False)),
 ]
 
 
